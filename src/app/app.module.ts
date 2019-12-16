@@ -5,18 +5,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatButtonModule, MatToolbarModule} from '@angular/material';
+
+const MaterialDesignModules = [
+  BrowserAnimationsModule,
+  MatToolbarModule,
+  MatButtonModule
+];
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NotFoundComponent,
-    HomeComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  declarations: [AppComponent, NotFoundComponent, HomeComponent],
+  imports: [BrowserModule, AppRoutingModule, ...MaterialDesignModules],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

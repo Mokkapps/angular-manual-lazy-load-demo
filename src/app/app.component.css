@@ -1,0 +1,20 @@
+.router-link {
+  margin-right: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.active-link {
+  text-decoration: underline;
+}
+
+.content {
+  padding: 10px;
+}
+
+.outlet {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+}

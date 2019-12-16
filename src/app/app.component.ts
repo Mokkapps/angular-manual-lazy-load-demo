@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { LazyLoaderService } from './lazy-loader.service';
-import {NavigationStart, Router} from '@angular/router';
+import { Component, OnInit, VERSION } from '@angular/core';
+import { NavigationStart, Route, Router } from '@angular/router';
 import { APP_ROUTES } from './app-routing.module';
 import { LAZY_ROUTES } from './lazy/lazy.module';
 
@@ -12,31 +11,39 @@ import { LAZY_ROUTES } from './lazy/lazy.module';
 export class AppComponent implements OnInit {
   title = 'angular-dynamic-routes-demo';
 
-  constructor(
-    private lazyLoaderService: LazyLoaderService,
-    private router: Router
-  ) {}
+  routes: Route[];
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.router.events.subscribe(async routerEvent => {
       if (routerEvent instanceof NavigationStart) {
-        if (routerEvent.url === '/lazy') {
-          console.log('LAZY ROUTE: ', );
-          // this.loadLazyModule();
+        if (routerEvent.url.includes('lazy') && !this.isLazyRouteAvailable()) {
+          this.loadLazyModule(routerEvent.url);
         }
       }
-      console.log('routerEvents: ', routerEvent);
-      console.log('New Router Config: ', this.router.config);
     });
-
+    this.routes = this.router.config;
   }
 
-  loadLazyModule(): void {
-    this.lazyLoaderService.loadModule(() =>
-      import('./lazy/lazy.module').then(m => m.LazyModule)
-    );
+  get angularVersion(): string {
+    return VERSION.full;
+  }
 
-    this.router.resetConfig([...APP_ROUTES, ...LAZY_ROUTES]);
-    this.router.navigate(['lazy']);
+  loadLazyModule(url?: string): void {
+    const appRoutes = [
+      ...APP_ROUTES,
+      {
+        path: 'lazy',
+        loadChildren: () => import('./lazy/lazy.module').then(m => m.LazyModule)
+      }
+    ];
+    this.router.resetConfig([...appRoutes, ...LAZY_ROUTES]);
+    this.router.navigate([url ? url : 'lazy']);
+    this.routes = this.router.config;
+  }
+
+  private isLazyRouteAvailable(): boolean {
+    return this.router.config.filter(c => c.path === 'lazy').length > 0;
   }
 }

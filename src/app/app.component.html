@@ -1,5 +1,26 @@
-<nav>
-  <a routerLink="home">Home</a>
-  <button (click)="loadLazyModule()">Load Lazy Module</button>
-</nav>
-<router-outlet></router-outlet>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <a
+      class="router-link"
+      *ngFor="let route of routes"
+      [routerLink]="route.path"
+      routerLinkActive="active-link"
+      >{{ route.path | uppercase }}</a
+    >
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="content">
+  <p>
+    This demo showcases how to programmatically lazy load a module and
+    components during runtime
+  </p>
+  <p>Corresponding <a href="https://www.mokkapps.de/blog/">blog post</a></p>
+  <p>Used Angular version: {{angularVersion}}</p>
+
+  <button mat-raised-button color="warn" (click)="loadLazyModule()">
+    Load Lazy Module
+  </button>
+  <div class="outlet">
+    <router-outlet></router-outlet>
+  </div>
+</div>
