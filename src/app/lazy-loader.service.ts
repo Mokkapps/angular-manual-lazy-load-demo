@@ -10,7 +10,7 @@ export class LazyLoaderService {
 
   constructor() {}
 
-  getLazyModulePromise(key: string): Promise<unknown> {
+  getLazyModule(key: string): Promise<unknown> {
     return this.lazyMap.get(key);
   }
 

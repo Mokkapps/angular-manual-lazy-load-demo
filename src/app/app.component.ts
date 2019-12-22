@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       const config = this.router.config;
       config.push({
         path: 'lazy',
-        loadChildren: () => this.lazyLoaderService.getLazyModulePromise('lazy')
+        loadChildren: () => this.lazyLoaderService.getLazyModule('lazy')
       });
       this.router.resetConfig(config);
       this.router.navigate([url ? url : 'lazy']);
