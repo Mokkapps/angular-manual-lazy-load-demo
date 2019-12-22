@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LazyHomeComponent } from './lazy-home/lazy-home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { PlaceholderComponent } from './placeholder/placeholder.component';
-import { MatToolbarModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 export const LAZY_ROUTES: Routes = [
   {
