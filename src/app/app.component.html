@@ -15,12 +15,22 @@
     components during runtime
   </p>
   <p>Corresponding <a href="https://www.mokkapps.de/blog/">blog post</a></p>
-  <p>Used Angular version: {{angularVersion}}</p>
+  <p>Used Angular version: {{ angularVersion }}</p>
 
   <button mat-raised-button color="warn" (click)="loadLazyModule()">
     Load Lazy Module
   </button>
   <div class="outlet">
-    <router-outlet></router-outlet>
+    <div class="loading-container" *ngIf="isLoading">
+      <mat-progress-spinner
+        [diameter]="50"
+        color="primary"
+        mode="indeterminate"
+        style="margin-right: 10px"
+      >
+      </mat-progress-spinner>
+      Loading fake config...
+    </div>
+    <router-outlet *ngIf="!isLoading"></router-outlet>
   </div>
 </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit, VERSION } from '@angular/core';
 import { NavigationStart, Route, Router } from '@angular/router';
-import { APP_ROUTES } from './app-routing.module';
-import { LAZY_ROUTES } from './lazy/lazy.module';
+import { LazyLoaderService } from './lazy-loader.service';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +9,14 @@ import { LAZY_ROUTES } from './lazy/lazy.module';
 })
 export class AppComponent implements OnInit {
   title = 'angular-dynamic-routes-demo';
+  isLoading = false;
 
   routes: Route[];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private lazyLoaderService: LazyLoaderService
+  ) {}
 
   ngOnInit(): void {
     this.router.events.subscribe(async routerEvent => {
@@ -31,16 +34,19 @@ export class AppComponent implements OnInit {
   }
 
   loadLazyModule(url?: string): void {
-    const appRoutes = [
-      ...APP_ROUTES,
-      {
+    this.isLoading = true;
+    this.lazyLoaderService.loadLazyModules().subscribe(() => {
+      const config = this.router.config;
+      config.push({
         path: 'lazy',
-        loadChildren: () => import('./lazy/lazy.module').then(m => m.LazyModule)
-      }
-    ];
-    this.router.resetConfig([...appRoutes, ...LAZY_ROUTES]);
-    this.router.navigate([url ? url : 'lazy']);
-    this.routes = this.router.config;
+        loadChildren: () => this.lazyLoaderService.getLazyModulePromise('lazy')
+      });
+      this.router.resetConfig(config);
+      this.router.navigate([url ? url : 'lazy']);
+      this.routes = this.router.config;
+
+      this.isLoading = false;
+    });
   }
 
   private isLazyRouteAvailable(): boolean {
